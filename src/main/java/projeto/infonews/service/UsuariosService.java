@@ -66,4 +66,14 @@ public class UsuariosService {
         }
         repository.deleteById(id);
     }
+    public UsuariosResponseDTO login(UsuariosRequestDTO dados) {
+        UsuariosEntity usuario = repository.findByEmail(dados.email())
+                .orElseThrow(() -> new RuntimeException("E-mail não encontrado"));
+
+        if (!usuario.getSenha().equals(dados.senha())) {
+            throw new RuntimeException("Senha incorreta");
+        }
+
+        return new UsuariosResponseDTO(usuario.getId(), usuario.getEmail());
+    }
 }
