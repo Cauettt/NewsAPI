@@ -41,4 +41,9 @@ public class UsuariosController {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<UsuariosResponseDTO> login(@RequestBody @Valid UsuariosRequestDTO dados) {
+        return ResponseEntity.ok(service.login(dados));
+    }
 }
