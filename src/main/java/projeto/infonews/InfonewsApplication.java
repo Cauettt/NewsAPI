@@ -13,4 +13,4 @@ public class InfonewsApplication {
 
         SpringApplication.run(InfonewsApplication.class, args);
     }
-}
+}   

@@ -21,10 +21,11 @@ public class NewsController {
     public ResponseEntity<NewsApiResponseDTO> buscar(
             @RequestParam String q,
             @RequestParam(required = false) String fontes,
+            @RequestParam(required = false) String language,
             @RequestHeader Long usuarioId) {
 
         historicoService.registrarBusca(q, usuarioId);
 
-        return ResponseEntity.ok(newsService.buscarNoticias(q, fontes));
+        return ResponseEntity.ok(newsService.buscarNoticias(q, fontes, language));
     }
 }
