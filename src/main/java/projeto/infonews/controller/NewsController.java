@@ -17,6 +17,14 @@ public class NewsController {
     @Autowired
     private HistoricoService historicoService;
 
+    @GetMapping("/destaques")
+    public ResponseEntity<NewsApiResponseDTO> destaques(
+            @RequestParam(required = false, defaultValue = "br") String country,
+            @RequestParam(required = false) String category) {
+
+        return ResponseEntity.ok(newsService.buscarDestaques(country, category));
+    }
+
     @GetMapping("/buscar")
     public ResponseEntity<NewsApiResponseDTO> buscar(
             @RequestParam String q,

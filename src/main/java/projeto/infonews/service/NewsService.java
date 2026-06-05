@@ -23,9 +23,22 @@ public class NewsService {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("everything")
-                        .queryParam("q", query)
+                        .queryParamIfPresent("q", Optional.ofNullable(query).filter(s -> !s.isBlank()))
                         .queryParamIfPresent("sources", Optional.ofNullable(fontes))
                         .queryParamIfPresent("language", Optional.ofNullable(language))
+                        .queryParam("apiKey", apiKey)
+                        .build())
+                .retrieve()
+                .bodyToMono(NewsApiResponseDTO.class)
+                .block();
+    }
+
+    public NewsApiResponseDTO buscarDestaques(String country, String category) {
+        return this.webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("top-headlines")
+                        .queryParamIfPresent("country", Optional.ofNullable(country))
+                        .queryParamIfPresent("category", Optional.ofNullable(category))
                         .queryParam("apiKey", apiKey)
                         .build())
                 .retrieve()
