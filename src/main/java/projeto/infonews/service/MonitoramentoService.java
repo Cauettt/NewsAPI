@@ -44,15 +44,21 @@ public class MonitoramentoService {
     }
 
     public List<MonitoramentoFeedItemDTO> buscarFeed(Long usuarioId) {
-        return monitoramentoRepository.findByUsuarioId(usuarioId).stream()
-                .map(m -> {
-                    String fontes = m.getTipo() == TipoMonitoramento.FONTE ? m.getValor() : null;
-                    String query  = m.getTipo() == TipoMonitoramento.TEMA  ? m.getValor() : null;
-                    NewsApiResponseDTO resp = newsService.buscarNoticias(query, fontes, null);
-                    List<NewsApiResponseDTO.NewsArticleDTO> artigos = resp != null ? resp.articles() : List.of();
-                    return new MonitoramentoFeedItemDTO(m.getId(), m.getNome(), m.getTipo().name(), artigos);
-                })
-                .toList();
+        List<MonitoramentoEntity> itens = monitoramentoRepository.findByUsuarioId(usuarioId);
+        List<MonitoramentoFeedItemDTO> resultado = new java.util.ArrayList<>();
+        for (MonitoramentoEntity m : itens) {
+            try {
+                String fontes = m.getTipo() == TipoMonitoramento.FONTE ? m.getValor() : null;
+                String query  = m.getTipo() == TipoMonitoramento.TEMA  ? m.getValor() : null;
+                NewsApiResponseDTO resp = newsService.buscarNoticias(query, fontes, null);
+                List<NewsApiResponseDTO.NewsArticleDTO> artigos = resp != null ? resp.articles() : List.of();
+                resultado.add(new MonitoramentoFeedItemDTO(m.getId(), m.getNome(), m.getTipo().name(), artigos));
+                Thread.sleep(300);
+            } catch (Exception e) {
+                resultado.add(new MonitoramentoFeedItemDTO(m.getId(), m.getNome(), m.getTipo().name(), List.of()));
+            }
+        }
+        return resultado;
     }
 
     private MonitoramentoDTO toDTO(MonitoramentoEntity e) {
