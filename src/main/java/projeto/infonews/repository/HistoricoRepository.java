@@ -10,4 +10,6 @@ public interface HistoricoRepository extends JpaRepository<HistoricoEntity, Long
 
     List<HistoricoEntity> findByUsuarioIdOrderByDataConsultaDesc(Long usuarioId);
 
+    void deleteByUsuarioId(Long usuarioId);
+
 }

@@ -16,7 +16,12 @@ public class HistoricoController {
 
     @GetMapping
     public ResponseEntity<List<HistoricoDTO>> verHistorico(@RequestHeader Long usuarioId) {
-
         return ResponseEntity.ok(service.obterHistorico(usuarioId));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> limparHistorico(@RequestHeader Long usuarioId) {
+        service.limparHistorico(usuarioId);
+        return ResponseEntity.noContent().build();
     }
 }

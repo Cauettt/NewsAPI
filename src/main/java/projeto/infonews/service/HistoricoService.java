@@ -2,6 +2,7 @@ package projeto.infonews.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import projeto.infonews.dto.HistoricoDTO;
 import projeto.infonews.entity.HistoricoEntity;
 import projeto.infonews.repository.HistoricoRepository;
@@ -29,5 +30,10 @@ public class HistoricoService {
         return historicoRepository.findByUsuarioIdOrderByDataConsultaDesc(usuarioId).stream()
                 .map(h -> new HistoricoDTO(h.getId(), h.getTermoBusca(), h.getDataConsulta()))
                 .toList();
+    }
+
+    @Transactional
+    public void limparHistorico(Long usuarioId) {
+        historicoRepository.deleteByUsuarioId(usuarioId);
     }
 }
