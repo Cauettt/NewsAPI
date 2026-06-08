@@ -7,6 +7,7 @@ import projeto.infonews.dto.NewsApiResponseDTO;
 import projeto.infonews.service.HistoricoService;
 import projeto.infonews.service.NewsService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/news")
 public class NewsController {
@@ -19,10 +20,14 @@ public class NewsController {
 
     @GetMapping("/destaques")
     public ResponseEntity<NewsApiResponseDTO> destaques(
-            @RequestParam(required = false, defaultValue = "br") String country,
+            @RequestParam(required = false) String idioma,
+            @RequestParam(required = false) String country,
             @RequestParam(required = false) String category) {
 
-        return ResponseEntity.ok(newsService.buscarDestaques(country, category));
+        String valorRecebido = (idioma != null) ? idioma : country;
+        String codigoPais = mapearIdiomaParaPais(valorRecebido);
+
+        return ResponseEntity.ok(newsService.buscarDestaques(codigoPais, category));
     }
 
     @GetMapping("/buscar")
@@ -35,5 +40,18 @@ public class NewsController {
         historicoService.registrarBusca(q, usuarioId);
 
         return ResponseEntity.ok(newsService.buscarNoticias(q, fontes, language));
+    }
+
+    private String mapearIdiomaParaPais(String idioma) {
+        if (idioma == null) return "br";
+
+        return switch (idioma.toLowerCase()) {
+            case "en" -> "us";
+            case "es" -> "mx";
+            case "pt" -> "br";
+            case "zh" -> "cn";
+            case "ar" -> "ae";
+            default -> idioma;
+        };
     }
 }
