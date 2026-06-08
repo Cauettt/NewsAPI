@@ -34,4 +34,8 @@ public class FavoritosService {
                 .map(f -> new FavoritosDTO(f.getId(), f.getTitulo(), f.getDescricao(), f.getUrl(), f.getFonteNome()))
                 .toList();
     }
+
+    public void removerFavorito(Long id) {
+        favoritosRepository.deleteById(id);
+    }
 }

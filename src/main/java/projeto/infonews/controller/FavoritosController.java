@@ -25,4 +25,10 @@ public class FavoritosController {
 
         return ResponseEntity.ok(service.listarFavoritos(usuarioId));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Long id) {
+        service.removerFavorito(id);
+        return ResponseEntity.noContent().build();
+    }
 }
